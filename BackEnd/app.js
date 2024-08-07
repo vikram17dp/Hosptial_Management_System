@@ -6,6 +6,7 @@ import fileUpload from 'express-fileupload';
 import { dbConnection } from './database/dsconnection.js';
 import messagerouter from './router/messagerouter.js'
 import {errorMidlleware} from './middlewares/errormiddleware.js'
+import userrouter from './router/userrouter.js'
 
 const app = express();
 app.use(cors(
@@ -26,6 +27,8 @@ app.use(fileUpload({
 config({path:"./config/config.env"});
 
 app.use('/api/v1/message',messagerouter);
+app.use('/api/v1/user',userrouter);
+
 dbConnection();
 app.use(errorMidlleware);
 
