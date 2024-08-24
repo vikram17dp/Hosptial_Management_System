@@ -61,4 +61,19 @@ export const addNewAdmin = AysncError(async(req,res,next)=>{
         sucess:true,
         message:"New Admin Registred"
     })
+    // generateToken(admin, "New Admin Registered Successfully!", 200, res);
+})
+export const getAllDoctors = AysncError(async(req,res,next)=>{
+    const doctors = await User.find({role:"Doctor"});
+    res.status(200).json({
+        sucess:true,
+        doctors
+    })
+})
+export const getAllUserDetails = AysncError(async(req,res,next)=>{
+    const user = req.user;
+    res.status(200).json({
+        success:true,
+        user
+    })
 })
