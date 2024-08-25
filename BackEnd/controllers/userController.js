@@ -5,6 +5,7 @@ import {generateToken} from '../utils/jwtToken.js'
 import cloudinary from 'cloudinary'
 
 export const patientRegister = AysncError(async(req,res,next)=>{
+
     const {firstName,lastName,email,phone,AadhaarNumber,dob,gender,password,role} = req.body;
     if(!firstName || !lastName || !email || !phone || !AadhaarNumber || !dob || !gender || !password || !role){
         return next(new ErrorHandler("Please Fill Full Form!",400));
@@ -18,13 +19,13 @@ export const patientRegister = AysncError(async(req,res,next)=>{
    
 })
 export const  login = AysncError(async(req,res,next)=>{
-    const {email,password,conformPassword,role} = req.body;
-    if(!email || !password || !conformPassword || !role){
+    const {email,password} = req.body;
+    if(!email || !password ){
         return next(ErrorHandler("Please Provide Valid Details",400));
     }
-    if(password !== conformPassword){
-        return next(new ErrorHandler("passwords are not matching",400))
-    }
+    // if(password !== conformPassword){
+    //     return next(new ErrorHandler("passwords are not matching",400))
+    // }
     const user = await User.findOne({email}).select("+password");
     if(!user){
         return next(new ErrorHandler("Invalid password or email",400));
@@ -33,9 +34,9 @@ export const  login = AysncError(async(req,res,next)=>{
     if(!ispasswordmatched){
         return next(new ErrorHandler("Ivalid password or email",400));
     }
-    if(role !== user.role){
-        return next(new ErrorHandler("role is not found for this user",400));
-    }
+    // if(role !== user.role){
+    //     return next(new ErrorHandler("role is not found for this user",400));
+    // }
     generateToken(user,"User LoggedIn SucessFully!",200,res);
 })
 export const addNewAdmin = AysncError(async(req,res,next)=>{
@@ -58,11 +59,11 @@ export const addNewAdmin = AysncError(async(req,res,next)=>{
         password,
         role:"Admin"
     });
-    res.status(200).json({
-        sucess:true,
-        message:"New Admin Registred"
-    })
-    // generateToken(admin, "New Admin Registered Successfully!", 200, res);
+    // res.status(200).json({
+    //     sucess:true,
+    //     message:"New Admin Registred"
+    // })
+    generateToken(admin, "New Admin Registered Successfully!", 200, res);
 })
 export const getAllDoctors = AysncError(async(req,res,next)=>{
     const doctors = await User.find({role:"Doctor"});

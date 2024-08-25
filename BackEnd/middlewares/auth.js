@@ -4,6 +4,9 @@ import ErrorHandler from "./errormiddleware.js";
 import jwt from 'jsonwebtoken'
 
 export const isAdminAuthenicated = AysncError(async(req,res,next)=>{
+    // console.log("Request cookies:", req.cookies);
+    // console.log("Request body:", req.body);
+    
     const token = req.cookies.adminToken;
     if(!token){
         return next(new ErrorHandler("Admin not Authenticated!",400));
