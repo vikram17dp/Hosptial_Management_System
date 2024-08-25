@@ -7,6 +7,7 @@ import { dbConnection } from './database/dsconnection.js';
 import messagerouter from './router/messagerouter.js'
 import {errorMidlleware} from './middlewares/errormiddleware.js'
 import userrouter from './router/userrouter.js'
+import appointmentrouter from './router/appointmentrouter.js'
 
 
 config({path:"./config/config.env"});
@@ -29,6 +30,7 @@ app.use(fileUpload({
 
 app.use('/api/v1/message',messagerouter);
 app.use('/api/v1/user',userrouter);
+app.use('/api/v1/appointment',appointmentrouter)
 
 dbConnection();
 app.use(errorMidlleware);
