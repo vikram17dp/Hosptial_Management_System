@@ -13,3 +13,10 @@ export const sendMessage = AysncError(async (req,res,next)=>{
         message:"message sent succesfully"
     })
 })
+export const getAllMessages = AysncError(async(req,res,next)=>{
+    const messages = await Message.find();
+    res.status(200).json({
+        success:true,
+        messages
+    })
+})
