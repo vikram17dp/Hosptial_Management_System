@@ -107,3 +107,15 @@ export const updateAppointmentStatus = AysncError(async(req,res,next)=>{
       appointment
     })
 })
+export const deleteAppointment = AysncError(async(req,res,next)=>{
+    const {id} = req.params;
+    let appointment = await Appointment.findById(id);
+    if(!appointment){
+        return next(new ErrorHandler("Appointment Not Found",404))
+    }
+    await Appointment.deleteOne();
+    res.status(200).json({
+      sucess:true,
+      message:"Appointment Deleted!"
+    })
+})
