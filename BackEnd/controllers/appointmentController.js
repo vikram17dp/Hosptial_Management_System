@@ -80,5 +80,13 @@ export const postAppointment = AysncError(async (req, res, next) => {
   res.status(200).json({
     sucess: true,
     message: "Appointment Sent Successfully!",
+    appointment
   });
 });
+export const getAllAppointment = AysncError(async(req,res,next)=>{
+    const appointment = await Appointment.find();
+    res.status(200).json({
+        sucess:true,
+        appointment
+    })
+})
