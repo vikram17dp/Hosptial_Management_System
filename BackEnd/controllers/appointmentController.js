@@ -90,3 +90,20 @@ export const getAllAppointment = AysncError(async(req,res,next)=>{
         appointment
     })
 })
+export const updateAppointmentStatus = AysncError(async(req,res,next)=>{
+    const {id} = req.params;
+    let appointment = await Appointment.findById(id);
+    if(!appointment){
+        return next(new ErrorHandler("Appointment Not Found",404));
+    }
+    appointment = await Appointment.findByIdAndUpdate(id,req.body,{
+          new:true,
+          runValidators:true,
+          useFindAndModify:false
+    })
+    res.status(200).json({
+      sucess:true,
+      message:"Appointment Stauts Updated!",
+      appointment
+    })
+})
