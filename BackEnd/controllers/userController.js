@@ -215,7 +215,8 @@ export const addNewDoctor = AysncError(async (req, res, next) => {
     docAvatar:{
         public_id:cloudinaryResponse.public_id,
         url:cloudinaryResponse.secure_url
-    }
+    },
+    doctorDepartment
     
   });
   res.status(200).json({
