@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import { GiHamburgerMenu } from "react-icons/gi";
+import { GiHamburgerMenu } from "react-icons/gi";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Context } from "../main";
@@ -59,9 +59,9 @@ const Navbar = () => {
             </button>
           )}
         </div>
-        {/* <div className="hamburger" onClick={() => setShow(!show)}>
+        <div className="hamburger" onClick={() => setShow(!show)}>
           <GiHamburgerMenu />
-        </div> */}
+        </div>
       </nav>
     </>
   );
