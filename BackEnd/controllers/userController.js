@@ -49,7 +49,7 @@ export const patientRegister = AysncError(async (req, res, next) => {
 export const login = AysncError(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return next(ErrorHandler("Please Provide Valid Details", 400));
+    return next( new ErrorHandler("Please Provide Valid Details", 400));
   }
   // if(password !== conformPassword){
   //     return next(new ErrorHandler("passwords are not matching",400))
