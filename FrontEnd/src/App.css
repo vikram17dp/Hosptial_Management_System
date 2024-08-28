@@ -57,6 +57,17 @@ h6 {
   font-size: 24px;
   font-weight: 700;
 }
+.registerh2{
+  text-align: center;
+  justify-content: center;
+  font-size: 4.2vh;
+}
+.registerp2{
+  font-size: 16px;
+}
+.registerp{
+  font-size: 17px;
+}
 @media (max-width: 1186px) {
   h1 {
     font-size: 32px;
@@ -175,6 +186,7 @@ h6 {
   display: flex;
   flex-direction: column;
   gap: 30px;
+ 
 }
 .form-component form div {
   display: flex;
@@ -187,7 +199,8 @@ h6 {
   font-size: 24px;
   padding: 10px 10px 10px 40px;
   border-radius: 7px;
-  border: 1px solid gray;
+  border: 0.2px solid gray;
+ 
 }
 .form-component button {
   padding: 10px 35px;

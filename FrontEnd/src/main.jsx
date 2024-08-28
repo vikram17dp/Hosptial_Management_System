@@ -6,12 +6,12 @@ import React from "react";
 export const Context = createContext({ isAuthenticated: false });
 
 const Appwrapeer = () => {
-  const [isAuthenticated, setIsAutenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState({});
   return(
     
   <Context.Provider
-    value={{ isAuthenticated, setIsAutenticated, user, setUser }}
+    value={{ isAuthenticated, setIsAuthenticated, user, setUser }}
   >
     <App />
   </Context.Provider>

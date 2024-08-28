@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const { isAuthenticated, setIsAutenticated } = useContext(Context);
+  const { isAuthenticated, setIsAuthenticated } = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
   // const [conformpassword, setConformPassword] = useState("");
@@ -25,11 +25,12 @@ const Login = () => {
         )
         .then((res) => {
           toast.success(res.data.message);
-          setIsAutenticated(true);
+          setIsAuthenticated(true);
           navigatorTo('/')
         });
     } catch (error) {
       toast.error(error.response.data.message);
+      // toast.error(message);
     }
   };
   if (isAuthenticated) {
