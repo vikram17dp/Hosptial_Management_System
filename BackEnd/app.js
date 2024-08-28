@@ -14,11 +14,13 @@ config({path:"./config/config.env"});
 const app = express();
 app.use(cors(
     {
-        origin:[process.env.FRONTEND_URL,process.env.DASHBOARD_URL],
+        origin:process.env.FRONTEND_URL,
+        // origin:'http://127.0.0.1:5173',
         methods:["GET","PUT","DELETE","POST"],
         credentials:true
     }
 ))
+// console.log("FRONTEND_URL:", process.env.FRONTEND_URL); 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
