@@ -18,6 +18,7 @@ function AppointmentForm() {
   const [address, setAddress] = useState("");
   const [hasVisited, setHasVisited] = useState(false);
   const navigateTo = useNavigate();
+  const token = localStorage.getItem('authToken'); 
   const departmentsArray = [
     "Pediatrics",
     "Orthopedics",
@@ -34,27 +35,26 @@ function AppointmentForm() {
   useEffect(()=>{
     const fetchDoctors = async()=>{
       try {
-        const {data} = await axios.get("http://localhost:4004/api/v1/user/doctors",{
+        const response = await axios.get("http://localhost:4004/api/v1/user/doctors", {
           withCredentials: true
         });
-        setDoctors(data.doctors);
-        console.log('Doctors fetched:', data.doctors);
+    
+        if (response && response.data) {
+          setDoctors(response.data.doctors);
+          console.log('Doctors fetched:', response.data.doctors);
+        } else {
+          console.log('Invalid response:', response);
+        }
       } catch (error) {
         console.log(error.response.data);
         toast.error(error.response.data.message)
-        // console.error("Error details:", error.response ? error.response.data : error.message);
-        // toast.error(error.response ? error.response.data.message : "An error occurred");
       }
     };
     fetchDoctors();
   },[]);
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!firstName || !lastName || !email || !phone || !AadhaarNumber || !dob || !gender || !appointmentDate || !department || !doctorFirstName || !doctorLastName || !address) {
-      toast.error("Please fill full form");
-      return;
-    }
-    console.log({
+    const requestData = {
       firstName,
       lastName,
       email,
@@ -66,12 +66,17 @@ function AppointmentForm() {
       department,
       doctor_firstName: doctorFirstName,
       doctor_lastName: doctorLastName,
-      hasVisited,
+      hasVisited: !!hasVisited,
       address,
-    });
+    };
+    console.log('Request data:', requestData);
+    if (!firstName || !lastName || !email || !phone || !AadhaarNumber || !dob || !gender || !appointmentDate || !department || !doctorFirstName || !doctorLastName || !address) {
+      toast.error("Please fill the full form");
+      return;
+    }
   
     try {
-      const { data } = await axios.post("http://localhost:4004/api/v1/appointment/post", {
+      const { data } = await axios.post("http://localhost:4004/api/v1/appointment/post", requestData,{
         firstName,
         lastName,
         email,
@@ -90,7 +95,9 @@ function AppointmentForm() {
         headers: { "Content-Type": "application/json" },
         Authorization: `Bearer ${token}`,
       });
+  
       toast.success(data.message);
+      // Clear form fields after successful submission
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -106,9 +113,16 @@ function AppointmentForm() {
       setAddress("");
       navigateTo('/');
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (error.response.status === 400) {
+        console.log('Validation error:', error.response.data);
+        toast.error('Validation error: Please check your input data');
+      } else {
+        console.log('Error:', error);
+        toast.error('Error: Something went wrong');
+      }
     }
   };
+  
   return (
     <>
       <div className='container form-component register-form'>
