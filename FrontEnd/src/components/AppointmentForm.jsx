@@ -28,61 +28,87 @@ function AppointmentForm() {
     "Physical Therapy",
     "Dermatology",
     "ENT",
+    "Denitist",
   ];
   const [doctors,setDoctors] = useState([]);
   useEffect(()=>{
     const fetchDoctors = async()=>{
-      await axios.get("http://localhost:4004/api/v1/user/doctors",{
-        withCrewithCredentials: true
-      });
-      setDoctors(data.doctors);
-      console.log(data.doctors);
+      try {
+        const {data} = await axios.get("http://localhost:4004/api/v1/user/doctors",{
+          withCredentials: true
+        });
+        setDoctors(data.doctors);
+        console.log('Doctors fetched:', data.doctors);
+      } catch (error) {
+        console.log(error.response.data);
+        toast.error(error.response.data.message)
+        // console.error("Error details:", error.response ? error.response.data : error.message);
+        // toast.error(error.response ? error.response.data.message : "An error occurred");
+      }
     };
     fetchDoctors();
   },[]);
-  const handleRegister= async (e)=>{
-      e.preventDefault();
-      try {
-        const {visitedBollean} = Boolean(hasVisited);
-        const {data} = await axios.post("http://localhost:4004/api/v1/appointment/post",{
-          firstName,
-          lastName,
-          email,
-          phone,
-          nic,
-          dob,
-          gender,
-          appointment_date: appointmentDate,
-          department,
-          doctor_firstName: doctorFirstName,
-          doctor_lastName: doctorLastName,
-          hasVisited:visitedBollean,
-          address,
-        },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        })
-        toast.success(data.message);
-        setFirstName("");
-        setLastName("");
-        setEmail("");
-        setPhone("");
-        setAadhaarNumber("");
-        setDob("");
-        setGender("");
-        setAppointmentDate("");
-        setDepartment("");
-        setDoctorFirstName("");
-        setDoctorLastName("");
-        setHasVisited("");
-        setAddress("");
-        navigateTo('/');
-        
-      } catch (error) {
-        toast.error(error.response.data.message);
-      }
-  }
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if (!firstName || !lastName || !email || !phone || !AadhaarNumber || !dob || !gender || !appointmentDate || !department || !doctorFirstName || !doctorLastName || !address) {
+      toast.error("Please fill full form");
+      return;
+    }
+    console.log({
+      firstName,
+      lastName,
+      email,
+      phone,
+      AadhaarNumber,
+      dob,
+      gender,
+      appointment_date: appointmentDate,
+      department,
+      doctor_firstName: doctorFirstName,
+      doctor_lastName: doctorLastName,
+      hasVisited,
+      address,
+    });
+  
+    try {
+      const { data } = await axios.post("http://localhost:4004/api/v1/appointment/post", {
+        firstName,
+        lastName,
+        email,
+        phone,
+        AadhaarNumber,
+        dob,
+        gender,
+        appointment_date: appointmentDate,
+        department,
+        doctor_firstName: doctorFirstName,
+        doctor_lastName: doctorLastName,
+        hasVisited: !!hasVisited,
+        address,
+      }, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+        Authorization: `Bearer ${token}`,
+      });
+      toast.success(data.message);
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPhone("");
+      setAadhaarNumber("");
+      setDob("");
+      setGender("");
+      setAppointmentDate("");
+      setDepartment("Pediatrics");
+      setDoctorFirstName("");
+      setDoctorLastName("");
+      setHasVisited(false);
+      setAddress("");
+      navigateTo('/');
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
   return (
     <>
       <div className='container form-component register-form'>
@@ -116,8 +142,8 @@ function AppointmentForm() {
           <div>
             <select value={department} onChange={(e)=>{
               setDepartment(e.target.value)
-              setFirstName("");
-              setLastName("")
+              setDoctorFirstName("");
+              setDoctorLastName("")
             }}>
                 {
                   departmentsArray.map((depart,index)=>{
@@ -130,14 +156,16 @@ function AppointmentForm() {
             <select value={`${doctorFirstName} ${doctorLastName}`}
               onChange={(e)=>{
                 const [firstName,lastName] = e.target.value.split(" ");
-                setFirstName(firstName);
-                setLastName(lastName);
+                setDoctorFirstName(firstName);
+                setDoctorLastName(lastName);
+                console.log('Doctor Selected:', firstName, lastName);
+                console.log('Department:', department);
               }}
               disabled={!department}
             >
               <option value="">Select Doctor</option>
               {
-                doctors.filter((doctor)=>doctorDepartment===department).map((doctor,index)=>{
+                doctors.filter(doctor=>doctor.doctorDepartment===department).map((doctor,index)=>{
                   return (
                     <option value={`${doctor.firstName} ${doctor.lastName}`} key={index}>
                       {doctor.firstName} {doctor.lastName}

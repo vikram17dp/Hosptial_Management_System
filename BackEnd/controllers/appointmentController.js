@@ -4,6 +4,7 @@ import { Appointment } from "../models/appointmentSchema.js";
 import { User } from "../models/userSchema.js";
 
 export const postAppointment = AysncError(async (req, res, next) => {
+  console.log('Request body:', req.body);
   const {
     firstName,
     lastName,
@@ -35,9 +36,7 @@ export const postAppointment = AysncError(async (req, res, next) => {
   ) {
     return next(new ErrorHandler("Please fill the full Form!", 400));
   }
-  //     console.log('Doctor First Name:', doctor_firstName);
-  // console.log('Doctor Last Name:', doctor_lastName);
-  // console.log('Department:', department);
+
   const isConflict = await User.find({
     firstName: doctor_firstName,
     lastName: doctor_lastName,
@@ -113,9 +112,9 @@ export const deleteAppointment = AysncError(async(req,res,next)=>{
     if(!appointment){
         return next(new ErrorHandler("Appointment Not Found",404))
     }
-    await Appointment.deleteOne();
+    await Appointment.deleteOne({ _id: id });
     res.status(200).json({
-      sucess:true,
+      success:true,
       message:"Appointment Deleted!"
     })
 })
