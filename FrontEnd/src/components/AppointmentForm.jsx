@@ -113,14 +113,14 @@ function AppointmentForm() {
       setAddress("");
       navigateTo('/');
     } catch (error) {
-      if (error.response.status === 400) {
-        console.log('Validation error:', error.response.data);
-        toast.error('Validation error: Please check your input data');
-      } else {
-        console.log('Error:', error);
-        toast.error('Error: Something went wrong');
-      }
+    if (error.response.status === 400) {
+      console.log('Validation error:', error.response.data);
+      toast.error('Validation error: Please check your input data');
+    } else {
+      console.log('Error:', error);
+      toast.error('Error: Something went wrong');
     }
+  }
   };
   
   return (
