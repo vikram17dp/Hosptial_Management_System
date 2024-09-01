@@ -4,7 +4,9 @@ import { Appointment } from "../models/appointmentSchema.js";
 import { User } from "../models/userSchema.js";
 
 export const postAppointment = AysncError(async (req, res, next) => {
-  console.log('Request body:', req.body);
+  console.log('Request body:', req.body);  // Logs the incoming request body for debugging
+
+  // Destructure the request body to extract necessary fields
   const {
     firstName,
     lastName,
@@ -20,6 +22,8 @@ export const postAppointment = AysncError(async (req, res, next) => {
     hasVisited,
     address,
   } = req.body;
+
+  // Check if any required fields are missing in the request body
   if (
     !firstName ||
     !lastName ||
@@ -34,29 +38,39 @@ export const postAppointment = AysncError(async (req, res, next) => {
     !doctor_lastName ||
     !address
   ) {
-    return next(new ErrorHandler("Please fill the full Form!", 400));
+    return next(new ErrorHandler("Please fill the full Form!", 400));  // Return an error if any field is missing
   }
 
+  // Search for a doctor matching the provided details
   const isConflict = await User.find({
     firstName: doctor_firstName,
     lastName: doctor_lastName,
     doctorDepartment: department,
     role: "Doctor",
   });
+
+  // Check if the doctor was not found
   if (!isConflict || isConflict.length === 0) {
-    return next(new ErrorHandler("Doctor Not Found!", 404));
+    return next(new ErrorHandler("Doctor Not Found!", 404));  // Return an error if the doctor does not exist
   }
+
+  // Check if multiple doctors match the provided details
   if (isConflict.length > 1) {
     return next(
       new ErrorHandler(
         "Doctors Conflict! Please Contact Through Email Or Phone!",
         404
       )
-    );
+    );  // Return an error if there's a conflict (multiple doctors found)
   }
 
+  // Extract the doctor's ID
   const doctorId = isConflict[0]._id;
+
+  // Extract the patient's ID from the request user (assuming the user is authenticated)
   const patientId = req.user._id;
+
+  // Create a new appointment with the provided details
   const appointment = await Appointment.create({
     firstName,
     lastName,
@@ -76,12 +90,15 @@ export const postAppointment = AysncError(async (req, res, next) => {
     doctorId,
     patientId,
   });
+
+  // Send a successful response with the created appointment details
   res.status(200).json({
-    sucess: true,
+    success: true,
     message: "Appointment Sent Successfully!",
     appointment
   });
 });
+
 export const getAllAppointment = AysncError(async(req,res,next)=>{
     const appointment = await Appointment.find();
     res.status(200).json({

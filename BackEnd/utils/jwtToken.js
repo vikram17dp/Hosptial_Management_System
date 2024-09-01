@@ -7,7 +7,8 @@ export const generateToken = (user,message,statuscode,res)=>{
 
     res.status(statuscode).cookie(cookieName,token,{
         expires:new Date(Date.now() + 24*60*60*1000),
-        httpOnly:true
+        httpOnly:true,
+       
         
 
     }).json({

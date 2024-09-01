@@ -92,16 +92,19 @@ function AppointmentForm() {
         address,
       }, {
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        Authorization: `Bearer ${token}`,
+        headers: { "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+
+        },
+      
       });
   
       toast.success(data.message);
-      // Clear form fields after successful submission
+
       setFirstName("");
       setLastName("");
       setEmail("");
-      setPhone("");
+      setPhone("");   
       setAadhaarNumber("");
       setDob("");
       setGender("");
